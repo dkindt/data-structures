@@ -3,67 +3,74 @@
 #include <stdexcept>
 
 template<class T>
-class LinkedList {
+class linked_list {
 
 public:
   
-  LinkedList() {
-    this->head_ = nullptr;
-    this->size_ = 0;
+  linked_list() {
+    head_ = nullptr;
+    size_ = 0;
   }
 
-  ~LinkedList() {
-  
+  ~linked_list() {
+    clear();
   }
 
   int size() {
-    return this->size_;
+    return size_;
   }
 
   bool empty() {
-    return this->size_ == 0;
+    return !size_;
   }
 
   void push(T data) {
-    Node *tmp = new Node(data);
-    tmp->next = this->head_;
-    this->head_ = tmp;
-    this->size_++;
+    node *tmp = new node(data);
+    tmp->next = head_;
+    head_ = tmp;
+    size_++;
   }
 
   void append(T data) {
-    Node *tmp = this->head_;
+    node *tmp = head_;
     while (tmp->next != nullptr) {
       tmp = tmp->next;
     }
-    tmp->next = new Node(data);
-    this->size_++;
+    tmp->next = new node(data);
+    size_++;
   }
 
   T operator [](int idx) {
-    if (idx >= this->size_) {
-      throw std::out_of_range("Index too large");
+    if (idx >= size_) {
+      throw std::out_of_range("Index out of bounds");
     }
-    Node *tmp = this->head_;
+    node *tmp = head_;
     for (int i = 0; i < idx; i++) {
       tmp = tmp->next;
     }
     return tmp->data;
   }
 
+  void clear() {
+    while (head_ != nullptr) {
+      node *tmp = head_->next;
+      delete head_;
+      head_ = tmp;
+    }
+  }
+
 private:
 
-  struct Node {
-  
+  struct node { 
     T data;
-    Node* next;
-    Node(T value) {
+    node* next;
+    node(T value) {
       data = value;
       next = nullptr;
     }
   }
 
-  Node *head_;
+  node *head_;
   int size_;
 
 }
